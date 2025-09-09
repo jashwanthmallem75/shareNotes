@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Upload Notes{% endblock %}
+{% block content %}
+  <h2>Upload Notes</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {{ form.non_field_errors }}
+    <label>Year</label>
+    {{ form.studying_year }}
+    {{ form.studying_year.errors }}
+
+    <label>Department</label>
+    {{ form.department }}
+    {{ form.department.errors }}
+
+    <label>Section</label>
+    {{ form.section }}
+    {{ form.section.errors }}
+
+    <label>Subject</label>
+    {{ form.subject }}
+    {{ form.subject.errors }}
+
+    <label>Unit Number</label>
+    {{ form.unit_number }}
+    {{ form.unit_number.errors }}
+
+    <label>Upload Files</label>
+    <input type="file" name="files" multiple>
+    <button type="submit" class="button primary">Upload</button>
+  </form>
+  <p><a href="{% url 'note_years' %}">View Notes</a></p>
+{% endblock %}
+

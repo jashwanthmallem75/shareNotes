@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Select Unit{% endblock %}
+{% block content %}
+<h2>Select Unit for Year {{ year }}, Section {{ section }}, Subject {{ subject }}</h2>
+<ul>
+  {% for unit in units %}
+    <li><a href="{% url 'note_unit_notes' year=year section=section subject=subject unit=unit %}">Unit {{ unit }}</a></li>
+  {% endfor %}
+</ul>
+<a class="button" href="{% url 'note_subjects' year=year section=section %}">Back to Subjects</a>
+<a class="button" href="{% url 'home' %}">Home</a>
+<a class="button" href="{% url 'upload_note' %}">Upload Notes</a>
+{% endblock %}

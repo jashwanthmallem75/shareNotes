@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Select Year{% endblock %}
+{% block content %}
+<h2>Select Year</h2>
+<ul>
+  {% for year in years %}
+    <li><a href="{% url 'note_sections' year=year %}">{{ year }} Year</a></li>
+  {% endfor %}
+</ul>
+<a class="button" href="{% url 'home' %}">Home</a>
+<a class="button" href="{% url 'upload_note' %}">Upload Notes</a>
+{% endblock %}

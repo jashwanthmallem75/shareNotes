@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Document Viewer</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    iframe { width: 100%; height: 100%; border: 0; }
+  </style>
+</head>
+<body>
+  {% if error_msg %}
+    <div style="color: red; font-size: 1.2em; margin: 2em;">{{ error_msg }}</div>
+    <a href="{{ download_url }}" style="font-size: 1.1em; color: blue;">Download the file</a>
+  {% elif viewer_url %}
+    <iframe src="{{ viewer_url }}" allowfullscreen></iframe>
+  {% else %}
+    <div style="color: red; font-size: 1.2em; margin: 2em;">Unable to display this document. Please download it instead.</div>
+    <a href="{{ download_url }}" style="font-size: 1.1em; color: blue;">Download the file</a>
+  {% endif %}
+</body>
+</html>
+
