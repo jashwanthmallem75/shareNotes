@@ -101,6 +101,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'EasyNotes' / 'static',
 ]
+
+# The absolute path to the directory where collectstatic will collect all static files.
+# Whitenoise will serve files from this directory in production.
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Whitenoise static file storage
