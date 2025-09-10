@@ -97,7 +97,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'EasyNotes' / 'static']
+# Add this line to tell Whitenoise to also look for files in your media directory
+STATICFILES_DIRS = [
+    BASE_DIR / 'EasyNotes' / 'static',
+]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Whitenoise static file storage
