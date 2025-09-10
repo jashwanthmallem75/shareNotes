@@ -1,1 +1,1 @@
-web: gunicorn EasyNotes.wsgi:application
+Procfile: web: gunicorn EasyNotes.EasyNotes.wsgi:application
