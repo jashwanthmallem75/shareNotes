@@ -1,1 +1,1 @@
-web: gunicorn EasyNotes.wsgi
+web: gunicorn EasyNotes.wsgi:application
