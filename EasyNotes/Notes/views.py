@@ -18,7 +18,7 @@ from django.urls import reverse
 # Step 1: Show available years
 def note_years(request):
     years = Note.objects.values_list('studying_year', flat=True).distinct().order_by('studying_year')
-    return render(request, 'note_years.html', {'years': years})
+    return render(request, 'note_years.html', {'years': years}) # Step 5: Show notes for a selected year, section, subject, and unit
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -98,10 +98,9 @@ def view_note_inline(request, note_id):
     except Note.DoesNotExist:
         raise Http404("File not found")
     content_type, _ = mimetypes.guess_type(note.file.path)
-    response = FileResponse(open(note.file.path, 'rb'), content_type=content_type or 'application/octet-stream')
-    # Force inline display instead of download for browser-viewable types (e.g., PDFs, images)
-    response['Content-Disposition'] = f"inline; filename=\"{note.file.name.split('/')[-1]}\""
-    return response
+    # Redirect to the file's URL. The browser will handle opening or downloading it.
+    # This is more robust for production environments and mobile devices.
+    return redirect(note.file.url)
 
 
 def view_note_web(request, note_id):
@@ -109,38 +108,10 @@ def view_note_web(request, note_id):
         note = Note.objects.get(pk=note_id)
     except Note.DoesNotExist:
         raise Http404("File not found")
-    url = note.file.url
-    ext = note.file.name.split('.')[-1].lower()
-    # For office formats, attempt local conversion to PDF via LibreOffice (soffice)
-    office_exts = {"doc", "docx", "ppt", "pptx", "xls", "xlsx"}
-    if ext in office_exts:
-        src_path = Path(note.file.path)
-        pdf_path = src_path.with_suffix('.pdf')
-        # Convert only if PDF missing or source is newer
-        try:
-            if not pdf_path.exists() or src_path.stat().st_mtime > pdf_path.stat().st_mtime:
-                # Try calling LibreOffice headless to convert
-                from django.conf import settings
-                soffice_binary = getattr(settings, 'SOFFICE_PATH', None) or 'soffice'
-                soffice_cmd = [
-                    soffice_binary, '--headless', '--nologo', '--nodefault', '--nolockcheck',
-                    '--convert-to', 'pdf', '--outdir', str(src_path.parent), str(src_path)
-                ]
-                subprocess.run(soffice_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except Exception as e:
-            # If conversion fails, show error message and fallback download link
-            error_msg = f"Document conversion failed: {str(e)}. You can download the file instead."
-            return render(request, 'web_viewer.html', {"viewer_url": None, "download_url": url, "error_msg": error_msg})
-
-        if pdf_path.exists():
-            # Build MEDIA URL for the generated PDF
-            from django.conf import settings
-            rel = os.path.relpath(str(pdf_path), str(settings.MEDIA_ROOT))
-            viewer_url = request.build_absolute_uri(settings.MEDIA_URL + rel.replace('\\', '/'))
-            return render(request, 'web_viewer.html', {"viewer_url": viewer_url, "download_url": url, "error_msg": None})
-
-    # Non-office types or conversion not needed
-    viewer_url = request.build_absolute_uri(url)
-    return render(request, 'web_viewer.html', {"viewer_url": viewer_url, "download_url": url, "error_msg": None})
+    # The `view_note_web` logic is complex and relies on local file conversion,
+    # which is not suitable for a standard production server.
+    # We will simplify it to redirect to the file's URL, just like `view_note_inline`.
+    # This ensures consistent and reliable behavior.
+    return redirect(note.file.url)
 
 # Create your views here.

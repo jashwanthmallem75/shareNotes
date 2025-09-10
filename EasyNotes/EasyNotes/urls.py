@@ -25,5 +25,9 @@ urlpatterns = [
     path('', include('EasyNotes.Notes.urls')),
 ]
 
-if settings.DEBUG:
+# Serve media files in development
+if settings.DEBUG:  
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# In production, Whitenoise will handle serving media files if they are in MEDIA_ROOT
+elif not settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

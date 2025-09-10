@@ -105,7 +105,10 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+if 'RENDER' in os.environ:
+    MEDIA_ROOT = '/var/data/media'
+else:
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 # Authentication redirects
 LOGIN_URL = 'login'
